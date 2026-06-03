@@ -48,12 +48,17 @@ jobs:
     runs-on: 'ubuntu-latest'
     container:
       image: mcr.microsoft.com/playwright:v1.17.1-focal
-      options: --ipc=host --user=root
+      options: --ipc=host --user root
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
         with:
           submodules: true
+
+      - name: Take ownership of workspace
+        run: |
+          chown -R root:root "$GITHUB_WORKSPACE"
+          chmod -R u+rwX "$GITHUB_WORKSPACE"
 
       - name: Install dependencies
         run: npm ci
