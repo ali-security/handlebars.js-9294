@@ -27,7 +27,11 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v2
         with:
-          node-version: ${{ matrix.node-version }}
+          # On Windows, pin Node 18/20 to the last patch before CVE-2024-27980
+          # (BatBadBut). The fix in 18.20.2+/20.12.2+ rejects spawn() of
+          # .cmd/.bat without shell:true, which breaks the grunt parser task
+          # that spawns jison.cmd directly.
+          node-version: ${{ (runner.os == 'Windows' && matrix.node-version == '18') && '18.20.1' || (runner.os == 'Windows' && matrix.node-version == '20') && '20.12.1' || matrix.node-version }}
 
       - name: Install dependencies
         run: npm ci
