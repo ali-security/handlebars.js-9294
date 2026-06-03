@@ -4,12 +4,13 @@ on:
   push:
     branches:
       - master
+      - main
   pull_request: {}
 
 jobs:
   lint:
     name: Lint
-    runs-on: 'ubuntu-latest'
+    runs-on: ubuntu-22.04
     steps:
       - name: Checkout
         uses: actions/checkout@v2
@@ -31,7 +32,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        operating-system: ['ubuntu-latest', 'windows-latest']
+        operating-system: [ubuntu-22.04, windows-2022]
         # https://nodejs.org/en/about/releases/
         node-version: ['10', '12', '14', '16', '18', '20']
 
@@ -62,7 +63,7 @@ jobs:
 
   browser:
     name: Test (Browser)
-    runs-on: 'ubuntu-20.04'
+    runs-on: ubuntu-22.04
     steps:
       - name: Checkout
         uses: actions/checkout@v2
