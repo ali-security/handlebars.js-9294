@@ -33,6 +33,12 @@ jobs:
         run: npm ci
 
       - name: Test
+        env:
+          # Node 18.20.2+/20.12.2+ patched CVE-2024-27980 (BatBadBut) by
+          # rejecting child_process.spawn of .cmd/.bat without shell:true.
+          # The grunt parser task spawns jison.cmd directly, so on Windows
+          # with Node 18/20 we revert that fix for this run only.
+          NODE_OPTIONS: ${{ (runner.os == 'Windows' && (matrix.node-version == '18' || matrix.node-version == '20')) && '--security-revert=CVE-2024-27980' || '' }}
         run: npm run test
 
       - name: Test (Integration)
